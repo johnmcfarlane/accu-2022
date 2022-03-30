@@ -1,40 +1,992 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<link rel="stylesheet" href="dist/reset.css">
-		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+	<title>Contractual Disappointment in C++ - ACCU 2022</title>
 
-		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="dist/reset.css">
+	<link rel="stylesheet" href="dist/reveal.css">
+	<link rel="stylesheet" href="dist/theme/simple.css">
+
+	<!-- Theme used for syntax highlighted code -->
+	<link rel="stylesheet" href="plugin/highlight/monokai.css">
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section data-transition="slide-in slide-out">
+				<h4>ACCU 2022</h4>
+				<p>&nbsp;</p>
+				<h2>Contractual</h2>
+				<h2>Disappointment</h2>
+				<h2>in C++</h2>
+				<p>&nbsp;</p>
+				<a href="https://johnmcfarlane.github.io/slides/2022-accu">johnmcfarlane.github.io/slides/2022-accu</a>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h3>About Me</h3>
+				<p>John McFarlane</p>
+				<p>Software Engineer, Jaguar Land Rover, Shannon, Ireland</p>
+				<p>
+					<img width=80 src="Octocat.png" alt="GitHub logo" />
+					<a href="https://github.com/johnmcfarlane/">github.com/johnmcfarlane</a>
+				</p>
+				<p>
+					<img width=80 src="2021 Twitter logo - blue.png" alt="Twitter logo" />
+					<a href="https://twitter.com/JSAMcFarlane">twitter.com/JSAMcFarlane</a>
+				</p>
+			</section>
+
+			<section data-transition="slide-in convex-out">
+				<h3>Background</h3>
+				<span class="fragment"><img width=384 height=267 data-src="BBC_Micro.jpg"
+						alt="source: chess-poster.com"></span>
+				<span>
+					<span>
+						<p>
+							<span class="fragment">Work:</span>
+							<span class="fragment">games,</span>
+							<span class="fragment">servers,</span>
+							<span class="fragment">automotive</span>
+						</p>
+					</span>
+					<span>
+						<p>
+							<span class="fragment">Fun:</span>
+							<span class="fragment">numerics,</span>
+							<span class="fragment">workflow,</span>
+							<span class="fragment">word games</span>
+						</p>
+					</span>
+					<span>
+						<p>
+							<span class="fragment">WG21:</span>
+							<span class="fragment">low latency,</span>
+							<span class="fragment">numerics,</span>
+							<span class="fragment">contracts</span>
+						</p>
+					</span>
+				</span>
+				<span class="fragment">
+					<span class="prompt">all of these subjects have influenced my attitude towards run-time
+						disappointment</span>
+				</span>
+			</section>
+
+			<section data-transition="convex-in slide-out">
+				<h3>This talk...</h3>
+				<div style="display: flex">
+					<div style="flex: 48%">
+						<h3 class="fragment">not about</h3>
+						<ul>
+							<li class="fragment">the C++ contracts feature</li>
+							<li class="fragment">everything you need to know to code better</li>
+							<li class="fragment">"safety-critical" or "safe" code</li>
+							<li class="fragment">which languages, tools and techniques are best</li>
+							<li class="fragment">salvaging a legacy project full of bugs and complexity</li>
+						</ul>
+					</div>
+					<div style="flex: 4%">
+					</div>
+					<div style="flex: 48%">
+						<h3 class="fragment">is about</h3>
+						<ul>
+							<li class="fragment">C++ contracts in general</li>
+							<li class="fragment">some thoughts and advice on how to code better</li>
+							<li class="fragment">correctness, productivity</li>
+							<li class="fragment">how languages, tools and techniques could be improved</li>
+							<li class="fragment">aiming for an attainable level of quality and simplicity</li>
+						</ul>
+					</div>
+				</div>
+				<span class="fragment">
+					<span class="prompt">further</span>
+				</span>
+			</section>
+
+			<section data-transition="slide-in convex-out">
+				<h3>This talk...</h3>
+				<div style="display: flex">
+					<div style="flex: 48%">
+						<h3 class="fragment">won't tell you to</h3>
+						<ul>
+							<li class="fragment">write simple code</li>
+							<li class="fragment">run many static analysis tools</li>
+							<li class="fragment">enable compiler warnings</li>
+							<li class="fragment">turn warnings into errors</li>
+							<li class="fragment">adopt modern standards</li>
+							<li class="fragment">enforce those coding standard</li>
+							<li class="fragment">fix <em>all</em> issues raised</li>
+						</ul>
+					</div>
+					<div style="flex: 4%">
+					</div>
+					<div style="flex: 48%">
+						<h3 class="fragment">will tell you to</h3>
+						<ul>
+							<li class="fragment">write correct code</li>
+							<li class="fragment">run dynamic analysis tools</li>
+							<li class="fragment">enable run-time checks</li>
+							<li class="fragment">trap bugs</li>
+							<li class="fragment">write good automated tests</li>
+							<li class="fragment">measure the coverage of tests</li>
+							<li class="fragment">fix <em>all</em> issues raised</li>
+						</ul>
+					</div>
+				</div>
+				<p class="fragment">But do it all!!</p>
+			</section>
+
+			<section data-transition="convex-in slide-out">
+				<h3>Disappointment</h3>
+				<p><a href="https://wg21.link/p0157">P0157R0: Handling Disappointment in C++</a></p>
+				<p>Lawrence Crowl, 2015</p>
+				<blockquote cite="https://wg21.link/p0157">
+					When a function fails to do what we want, we are disappointed.
+					How do we report that disappointment to callers?
+					How do we handle that disappointment in the caller?
+				</blockquote>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h3>Bugs and Errors</h3>
+				<p><a href="https://wg21.link/p709r2">P0709R2: Zero-overhead deterministic exceptions: Throwing
+						values</a></p>
+				<p>Herb Sutter, 2018</p>
+				<blockquote cite="https://wg21.link/p0709r2">
+					Programming bugs (e.g., out-of-bounds access, null dereference)
+					and abstract machine corruption (e.g., stack overflow)
+					cause a corrupted state that cannot be recovered from programmatically,
+					and so they should never be reported to the calling code
+					as errors that code could somehow handle.
+				</blockquote>
+				<span class="prompt">
+					<span class="fragment">
+						bugs and errors are different;
+						that's very important;
+						it's not always obvious which is which
+					</span>
+				</span>
+			</section>
+
+			<section data-transition="slide-in convex-out">
+				<h3>Contracts</h3>
+				<p><a href="https://youtu.be/aAFRxRznVjQ">Contract Programming in C++(20)</a></p>
+				<p>Alisdair Meredith, CppCon 2018</p>
+				<blockquote cite="https://www.youtube.com/watch?v=aAFRxRznVjQ&t=359s">
+					A contract is an exchange of promises
+					between a client and a provider.
+				</blockquote>
+			</section>
+
+
+			<section data-transition="convex-in slide-out">
+				<h3>Contracts</h3>
+				<div style="display: flex">
+					<div style="flex: 50%">
+						<h3 class="fragment">Types</h3>
+						<ul>
+							<li class="fragment">C++ API Contracts</li>
+							<li class="fragment">C++ Standard</li>
+							<li class="fragment">End User Contract</li>
+							<li class="fragment">Test User Contract</li>
+						</ul>
+					</div>
+					<div style="flex: 50%">
+						<h3 class="fragment">Attributes</h3>
+						<ul>
+							<li class="fragment">Agreement</li>
+							<li class="fragment">Client</li>
+							<li class="fragment">Provider</li>
+							<li class="fragment">(Client) Violation</li>
+						</ul>
+					</div>
+				</div>
+				<p class="prompt">
+					<span class="fragment">
+						I'll mostly talk about client violation.
+					</span>
+				</p>
+			</section>
+
+			<section data-transition="slide-in none-out">
+				<h3>Contract Attributes</h3>
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th>C++ API</th>
+							<th>standard</th>
+							<th>end user</th>
+							<th>test user</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>agreement</td>
+							<td class="witw">docs</td>
+							<td class="witw">ISO/IEC 14882</td>
+							<td class="witw">docs</td>
+							<td class="witw">docs</td>
+						</tr>
+						<tr>
+							<td>client</td>
+							<td class="witw">dev</td>
+							<td class="witw">dev</td>
+							<td class="witw">user</td>
+							<td class="witw">dev</td>
+						</tr>
+						<tr>
+							<td>provider</td>
+							<td class="witw">dev</td>
+							<td class="witw">implementer</td>
+							<td class="witw">dev</td>
+							<td class="witw">implementer</td>
+						</tr>
+						<tr>
+							<td>violation</td>
+							<td class="witw">bug</td>
+							<td class="witw">bug</td>
+							<td class="witw">error</td>
+							<td class="witw">error</td>
+						</tr>
+					</tbody>
+				</table>
+				<span class="prompt">the matrix of attributes by contract</span>
+			</section>
+
+			<section data-transition="none-in none-out">
+				<h3>Contract Attributes</h3>
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th>C++ API</th>
+							<th>standard</th>
+							<th>end user</th>
+							<th>test user</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>agreement</td>
+							<td>docs</td>
+							<td>ISO/IEC 14882</td>
+							<td>docs</td>
+							<td>docs</td>
+						</tr>
+						<tr>
+							<td>client</td>
+							<td>dev</td>
+							<td>dev</td>
+							<td>user</td>
+							<td>dev</td>
+						</tr>
+						<tr>
+							<td>provider</td>
+							<td>dev</td>
+							<td>implementer</td>
+							<td>dev</td>
+							<td>implementer</td>
+						</tr>
+						<tr>
+							<td>violation</td>
+							<td>bug</td>
+							<td>bug</td>
+							<td>error</td>
+							<td>error</td>
+						</tr>
+					</tbody>
+				</table>
+				<span class="prompt">the matrix of attributes by contract</span>
+			</section>
+
+			<section data-transition="none-in none-out">
+				<h3>Contract Attributes</h3>
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th class="implicit">C++ API</th>
+							<th class="implicit">standard</th>
+							<th class="implicit">end user</th>
+							<th class="implicit">test user</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="implicit">agreement</td>
+							<td class="implicit">docs</td>
+							<td class="implicit">ISO/IEC 14882</td>
+							<td class="implicit">docs</td>
+							<td class="implicit">docs</td>
+						</tr>
+						<tr>
+							<td class="implicit">client</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">user</td>
+							<td class="implicit">dev</td>
+						</tr>
+						<tr>
+							<td class="implicit">provider</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">implementer</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">implementer</td>
+						</tr>
+						<tr>
+							<td>violation</td>
+							<td>bug</td>
+							<td>bug</td>
+							<td>error</td>
+							<td>error</td>
+						</tr>
+					</tbody>
+				</table>
+				<span class="prompt">client violations are either bugs or errors</span>
+			</section>
+
+			<section data-transition="none-in none-out">
+				<h3>Contract Attributes</h3>
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th class="implicit">C++ API</th>
+							<th class="implicit">standard</th>
+							<th class="implicit">end user</th>
+							<th>test user</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="implicit">agreement</td>
+							<td class="implicit">docs</td>
+							<td class="implicit">ISO/IEC 14882</td>
+							<td class="implicit">docs</td>
+							<td>docs</td>
+						</tr>
+						<tr>
+							<td class="implicit">client</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">user</td>
+							<td>dev</td>
+						</tr>
+						<tr>
+							<td class="implicit">provider</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">implementer</td>
+							<td class="implicit">dev</td>
+							<td>implementer</td>
+						</tr>
+						<tr>
+							<td class="implicit">violation</td>
+							<td class="implicit">bug</td>
+							<td class="implicit">bug</td>
+							<td class="implicit">error</td>
+							<td>error</td>
+						</tr>
+					</tbody>
+				</table>
+				<span class="prompt">the test user contract is a very special case</span>
+			</section>
+
+			<section data-transition="none-in none-out">
+				<h3>Contract Attributes</h3>
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th class="implicit">C++ API</th>
+							<th class="implicit">standard</th>
+							<th class="implicit">end user</th>
+							<th class="implicit">test user</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="implicit">agreement</td>
+							<td class="implicit">docs</td>
+							<td class="implicit">ISO/IEC 14882</td>
+							<td class="implicit">docs</td>
+							<td class="implicit">docs</td>
+						</tr>
+						<tr>
+							<td class="implicit">client</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">dev</td>
+							<td>user</td>
+							<td class="implicit">dev</td>
+						</tr>
+						<tr>
+							<td class="implicit">provider</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">implementer</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">implementer</td>
+						</tr>
+						<tr>
+							<td class="implicit">violation</td>
+							<td class="implicit">bug</td>
+							<td class="implicit">bug</td>
+							<td class="implicit">error</td>
+							<td class="implicit">error</td>
+						</tr>
+					</tbody>
+				</table>
+				<span class="prompt">single most important cell</span>
+			</section>
+
+			<section data-transition="none-in slide-out">
+				<h3>Contract Attributes</h3>
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th class="witw">C++ API</th>
+							<th class="witw">standard</th>
+							<th class="implicit">end user</th>
+							<th class="witw">test user</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="witw">agreement</td>
+							<td class="witw">docs</td>
+							<td class="witw">ISO/IEC 14882</td>
+							<td class="witw">docs</td>
+							<td class="witw">docs</td>
+						</tr>
+						<tr>
+							<td class="implicit">client</td>
+							<td class="witw">dev</td>
+							<td class="witw">dev</td>
+							<td>user</td>
+							<td class="witw">dev</td>
+						</tr>
+						<tr>
+							<td class="witw">provider</td>
+							<td class="witw">dev</td>
+							<td class="witw">implementer</td>
+							<td class="witw">dev</td>
+							<td class="witw">implementer</td>
+						</tr>
+						<tr>
+							<td class="witw">violation</td>
+							<td class="witw">bug</td>
+							<td class="witw">bug</td>
+							<td class="witw">error</td>
+							<td class="witw">error</td>
+						</tr>
+					</tbody>
+				</table>
+				<span class="prompt">the user is the client in the End User Contract</span>
+			</section>
+
+			<section data-transition="slide-in convex-out">
+				<h3>End User Contract</h3>
+				<ul>
+					<li class="fragment">
+						The exchange of promises between the user and developer of a software product.
+					</li>
+					<li class="fragment">It's expected that the user may violate the contract.
+						<ul>
+							<li class="fragment">All people make mistakes.</li>
+							<li class="fragment">Some people are naughty!</li>
+						</ul>
+					</li>
+					<li class="fragment">Such violations are <em>errors</em>.</li>
+					<li class="fragment">Errors should be handled by the program.</li>
+				</ul>
+				<span class="prompt">so let's talk about</span>
+			</section>
+
+
+			<section data-transition="convex-in slide-out">
+				<h1>Errors!</h1>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h3>Errors</h3>
+				<ul>
+					<li class="fragment">arise from real-world unpredictability/unreliability</li>
+					<li class="fragment">are caused by real-world phenomena (such as humans), and</li>
+					<li class="fragment">are introduced through interfaces with the real world, e.g.:
+						<ul>
+							<li class="fragment"><code>std::filesystem</code> and
+								<code>std::string</code> are UI elements!
+							</li>
+							<li class="fragment"><code>std::chrono</code> models the real world and similarly 'messy'.
+							</li>
+						</ul>
+					</li>
+					<li class="fragment">Input is a major source of errors:
+						<ul>
+							<li class="fragment">command line, network traffic, files, input devices.</li>
+						</ul>
+					</li>
+					<li class="fragment">are imperfections modelled within the system</li>
+				</ul>
+				<p class="prompt">
+					<span class="fragment">*modelled* imperfections</span>
+				</p>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<p><a href="https://xkcd.com/435/">xkcd.com/435</a></p>
+				<img width=100% src="purity.png" alt="XKCD comic strip about purity" />
+				<div style="display: flex">
+					<span style="flex: 3%"></span>
+					<span style="flex: 11%">errors</span>
+					<span style="flex: 13%">errors</span>
+					<span style="flex: 13%">errors</span>
+					<span style="flex: 12%">errors</span>
+					<span style="flex: 10%">errors</span>
+					<span style="flex: 8%" class="witw">errors</span>
+					<span style="flex: 12%" class="witw">errors</span>
+					<span style="flex: 10%">bugs</span>
+					<span style="flex: 8%"></span>
+				</div>
+				<span class="prompt">comparison between engineering / science, purity / perfection</span>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<p>Errors are things that can go wrong</p>
+				<p>- even in perfect programs.</p>
+				<div class="prompt">
+					<p class="fragment">crucially, you cannot fix the code to make the error go away</p>
+					<p class="fragment">two main categories of error spring to mind</p>
+				</div>
+			</section>
+
+			<section data-transition="slide-in convex-out">
+				<h2>Examples of Errors</h2>
+				<div class="prompt">
+					<p class="fragment">
+						this is a personal list; I'd love to hear about other examples
+					</p>
+				</div>
+				<div style="display: flex">
+					<div style="flex: 50%">
+						<h3 class="fragment">resource</h3>
+						<ul>
+							<li class="fragment">missing/read-only file</li>
+							<li class="fragment">missing hardware device</li>
+							<li class="fragment">network address already in used</li>
+						</ul>
+					</div>
+					<div style="flex: 50%">
+						<h3 class="fragment">ill-formed input</h3>
+						<ul>
+							<li class="fragment">file too short</li>
+							<li class="fragment">file doesn't conform to format, e.g. JSON</li>
+							<li class="fragment">parameter is out of range</li>
+							<li class="fragment">unexpected device type</li>
+							<li class="fragment">unexpected network packed size</li>
+						</ul>
+					</div>
+				</div>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h1>Error Handling</h1>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h3>Error Handling</h3>
+				<p class="fragment">
+					Recap: <em>client violations</em> of the <em>End User Contract</em> should be handled by the program
+				</p>
+				<p class="fragment">
+					The user needs to know about them in order to decide what to do next.
+				</p>
+				<p class="fragment">
+					The software must inform the user to this end.
+				</p>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h3>$1,000,000 Question</h3>
+				<p>
+					How does your program handle errors?
+				</p>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h3>$1,000,000 Answer</h3>
+				<p>
+					It depends.
+				</p>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h3>It depends on the program</h3>
+				<ul>
+					<li class="fragment">Is your program batch or steady-state?</li>
+					<li class="fragment">Does your program have realtime constraints?</li>
+					<li class="fragment">Does your program respond through:
+						<ul>
+							<li class="fragment">a console,</li>
+							<li class="fragment">a GUI,</li>
+							<li class="fragment">a RESTful API,</li>
+							<li class="fragment">something else, or</li>
+							<li class="fragment">nothing at all?</li>
+						</ul>
+					</li>
+					<li class="fragment">Is your program even a program, or reusable library?</li>
+				</ul>
+				<div class="prompt">
+					<p class="fragment">
+						Worse: it's really two questions: how to you signal errors and how to you describe them?
+					</p>
+				</div>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h3>Choices, choices!</h3>
+				<p class="fragment">
+					C++ has too many error-handling facilities.
+				</p>
+				<p class="fragment">
+					But part of the problem is its versatility.
+				</p>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h3>Some Techniques for Simple Programs</h3>
+				<ul class="fragment">
+					Reporting:
+					<ul>
+						<li class="fragment">Log, e.g. print something helpful to `stderr`</li>
+					</ul>
+					<p class="fragment">Signalling:</p>
+					<ul>
+						<li class="fragment">Exceptions</li>
+						<li class="fragment">Return values</li>
+						<li class="fragment">Abnormal program termination</li>
+					</ul>
+				</ul>
+				<div class="prompt">
+					<p class="fragment">
+						Note that signalling an error it not itself an error.
+						If some failure is propagated through the stack,
+						it's only an error when it is passed to the user.
+					</p>
+				</div>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h3>Best Advice For Error Handling...</h3>
+				<p class="fragment">Practice emotional code!</p>
+				<p class="fragment">Care about the user. Try and imagine you're them. What would help you most?</p>
+				<p class="fragment">Empathise.</p>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h4>Example 1: Print result, return success, log details</h4>
+				<pre class="fragment" data-id="code-animation"><code class="cpp" data-trim data-line-numbers="2-12|10|7,11|6|17-18">
+					// print file's size or return false
+					auto print_file_size(char const* filename)
+					{
+						std::ifstream in(filename, std::ios::binary | std::ios::ate);
+						if (!in) {
+							std::cerr << std::format("failed to open file \"{}\"\n", filename);
+							return false;
+						}
+						
+						std::cout << std::format("{}\n", in.tellg());
+						return true;
+					}
+
+					auto print_config_file_size()
+					{
+						if (!print_file_size("default.cfg")) {
+							// in this function, we know the nature of the file
+							std::cerr << "failed to print the size of the config file\n";
+						}
+					}
+				</code></pre>
+				<div class="prompt">
+					<p class="fragment">
+						Very basic, but it's a start.
+						Not much use though!
+					</p>
+				</div>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h4>Example 2: Return result, ??? success, log details</h4>
+				<pre class="fragment" data-id="code-animation"><code class="cpp" data-trim data-line-numbers="|10|6-7">
+					// return file's size
+					auto file_size(char const* filename)
+					{
+						std::ifstream in(filename, std::ios::binary | std::ios::ate);
+						if (!in) {
+							std::cerr << std::format("failed to open file \"{}\"\n", filename);
+							// how is the disappointment returned now?
+						}
+
+						return in.tellg();
+					}
+				</code></pre>
+				<div class="prompt">
+					<p class="fragment">
+						Structured binding can help a little.
+						But unlike Python C++ only returns a maximum of one object.
+					</p>
+				</div>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h4>Example 3: Return result <em>or</em> failure, log details</h4>
+				<pre class="fragment" data-id="code-animation"><code class="cpp" data-trim data-line-numbers="|10|7|6|2">
+					auto file_size(char const* filename)
+					-> std::optional&lt;std::ifstream::pos_type>
+					{
+						std::ifstream in(filename, std::ios::binary | std::ios::ate);
+						if (!in) {
+							std::cerr << std::format("failed to open file \"{}\"\n", filename);
+							return std::nullopt;
+						}
+
+						return in.tellg();
+					}
+				</code></pre>
+				<div class="prompt">
+					<p class="fragment">
+						`std::optional` may not be the best choice but it's readily available.
+						This is starting to get complicated!
+					</p>
+				</div>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h4>Example 4: Return result, abort on failure, log details</h4>
+				<pre class="fragment" data-id="code-animation"><code class="cpp" data-trim data-line-numbers="1-7|14|13|5">
+					// error handler function
+					template &lt;typename... args>
+					[[noreturn]] void fatal(args&&... parameters)
+					{
+						std::cerr << std::format(std::forward&lt;args>(parameters)...);
+						std::abort();
+					}
+
+					int main(int argc, char* argv[])
+					{
+						auto const expected_num_params{3};
+						if (argc != expected_num_params) {
+							fatal("Wrong number of arguments provided. Expected={}; Actual={}\n", expected_num_params, argc);
+							return EXIT_FAILURE;
+						}
+					}
+				</code></pre>
+				<div class="prompt">
+					<p class="fragment">
+						This is simple and optimally efficient in the happy path.
+						But it's limited, doesn't scale.
+					</p>
+				</div>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h3>Exceptions</h3>
+				<ul class="fragment">
+					<p>Pros:
+					<li class="fragment">versatile/scalable</li>
+					<li class="fragment">very efficient in happy path</li>
+					<li class="fragment">hides control flow</li>
+					<p class="fragment">Cons:</p>
+					<li class="fragment">exceedingly slow in failure path</li>
+					<li class="fragment">not always optimal in happy path</li>
+					<li class="fragment">hides control flow</li>
+				</ul>
+				<div class="prompt">
+					<p class="fragment">
+						Just one page, sorry.
+						It's a big subject!
+					</p>
+				</div>
+			</section>
+
+			<section data-transition="slide-in fade-out">
+				<h3>Contract Attributes</h3>
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th class="implicit">C++ API</th>
+							<th class="implicit">standard</th>
+							<th>end user</th>
+							<th class="implicit">test user</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="implicit">agreement</td>
+							<td class="implicit">docs</td>
+							<td class="implicit">ISO/IEC 14882</td>
+							<td>docs</td>
+							<td class="implicit">docs</td>
+						</tr>
+						<tr>
+							<td class="implicit">client</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">dev</td>
+							<td>user</td>
+							<td class="implicit">dev</td>
+						</tr>
+						<tr>
+							<td class="implicit">provider</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">implementer</td>
+							<td>dev</td>
+							<td class="implicit">implementer</td>
+						</tr>
+						<tr>
+							<td class="implicit">violation</td>
+							<td class="implicit">bug</td>
+							<td class="implicit">bug</td>
+							<td>error</td>
+							<td class="implicit">error</td>
+						</tr>
+					</tbody>
+				</table>
+				<span class="prompt">so that's the End User Contract,
+					its client violations,
+					and how you, the provider, should handle those
+				</span>
+			</section>
+
+			<section data-transition="fade-in convex-out">
+				<h3>Contract Attributes</h3>
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th>C++ API</th>
+							<th class="implicit">standard</th>
+							<th class="implicit">end user</th>
+							<th class="implicit">test user</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="implicit">agreement</td>
+							<td>docs</td>
+							<td class="implicit">ISO/IEC 14882</td>
+							<td class="implicit">docs</td>
+							<td class="implicit">docs</td>
+						</tr>
+						<tr>
+							<td class="implicit">client</td>
+							<td>dev</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">user</td>
+							<td class="implicit">dev</td>
+						</tr>
+						<tr>
+							<td class="implicit">provider</td>
+							<td>dev</td>
+							<td class="implicit">implementer</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">implementer</td>
+						</tr>
+						<tr>
+							<td class="implicit">violation</td>
+							<td>bug</td>
+							<td class="implicit">bug</td>
+							<td class="implicit">error</td>
+							<td class="implicit">error</td>
+						</tr>
+					</tbody>
+				</table>
+				<span class="prompt">lets turn our attention to the C++ API Contract and ...</span>
+			</section>
+
+
+			<section data-transition="convex-in slide-out">
+				<h1>Bugs!</h1>
+			</section>
+
+			<section data-transition="slide-in convex-out">
+				<h3>C++ API Contracts</h3>
+				<ul>
+					<li class="fragment">
+						The exchange of promises between the user and developer of a C++ API.
+					</li>
+					<li class="fragment">A correct program requires that the contract is <em>never</em> violated.
+						<ul>
+							<li class="fragment">Developers need to follow practices that help achieve this.</li>
+							<li class="fragment">Incorrect programs and APIs can be exploted.</li>
+						</ul>
+					</li>
+					<li class="fragment">Violations are <em>bugs</em>.</li>
+					<li class="fragment">Bugs must be fixed by the developer.</li>
+				</ul>
+			</section>
+
+
+
+
+
+			<section data-transition="slide-in convex-out">
+				<h3>End User Contract (recap)</h3>
+				<ul>
+					<li class="fragment">Provider violation is a bug.</li>
+					<li class="fragment">Bug are dangerous and must be fixed by the developer!</li>
+				</ul>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h1>Bugs!</h1>
+			</section>
+
+
+
+
+			<section data-transition="convex-in">
+				<h3>Thank You</h3>
+				<div>Questions: ?</div>
+				<div class="witw">Answers:</div>
+				<div style="font-size: 75%">
+					<p>@JSAMcFarlane</p>
+					<p><a href="mailto:fixed-point@john.mcfarlane.name">fixed-point@john.mcfarlane.name</a></p>
+					<p style="font-size: 85%"><a
+							href="https://johnmcfarlane.github.io/slides/2019-accu/">johnmcfarlane.github.io/slides/2019-accu</a>
+					</p>
+				</div>
+			</section>
 		</div>
+	</div>
 
-		<script src="dist/reveal.js"></script>
-		<script src="plugin/notes/notes.js"></script>
-		<script src="plugin/markdown/markdown.js"></script>
-		<script src="plugin/highlight/highlight.js"></script>
-		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
-			Reveal.initialize({
-				hash: true,
+	<script src="dist/reveal.js"></script>
+	<script src="plugin/notes/notes.js"></script>
+	<script src="plugin/markdown/markdown.js"></script>
+	<script src="plugin/highlight/highlight.js"></script>
+	<script>
+		// More info about initialization & config:
+		// - https://revealjs.com/initialization/
+		// - https://revealjs.com/config/
+		Reveal.initialize({
+			slideNumber: true,
 
-				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
-			});
-		</script>
-	</body>
+			width: 1200,
+			height: 700,
+
+			hash: true,
+
+			// Learn about plugins: https://revealjs.com/plugins/
+			plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+		});
+	</script>
+</body>
+
 </html>
