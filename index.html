@@ -19,17 +19,14 @@
 <body>
 	<div class="reveal">
 		<div class="slides">
-			<section data-transition="slide-in slide-out">
-				<h4>ACCU 2022</h4>
-				<p>&nbsp;</p>
-				<h2>Contractual</h2>
-				<h2>Disappointment</h2>
-				<h2>in C++</h2>
-				<p>&nbsp;</p>
-				<a href="https://johnmcfarlane.github.io/slides/2022-accu">johnmcfarlane.github.io/slides/2022-accu</a>
-			</section>
 
-			<section data-transition="slide-in slide-out">
+			<section data-transition="fade-out" data-background="Contractual Disappointment in C++ copy.png">
+			</section>
+			<!-- <section data-transition="slide-in slide-out">
+				<img width="100%" src="Contractual Disappointment in C++ copy.png"/>
+			</section> -->
+
+			<section data-transition="fade-in slide-out">
 				<h3>About Me</h3>
 				<p>John McFarlane</p>
 				<p>Software Engineer, Jaguar Land Rover, Shannon, Ireland</p>
@@ -41,13 +38,15 @@
 					<img width=80 src="2021 Twitter logo - blue.png" alt="Twitter logo" />
 					<a href="https://twitter.com/JSAMcFarlane">twitter.com/JSAMcFarlane</a>
 				</p>
+				<p>&nbsp;</p>
+				<a href="https://johnmcfarlane.github.io/slides/2022-accu">johnmcfarlane.github.io/slides/2022-accu</a>
 			</section>
 
 			<section data-transition="slide-in convex-out">
 				<h3>Background</h3>
-				<span class="fragment"><img width=384 height=267 data-src="BBC_Micro.jpg"
+				<!-- <span class="fragment"><img width=384 height=267 data-src="BBC_Micro.jpg"
 						alt="source: chess-poster.com"></span>
-				<span>
+				<span> -->
 					<span>
 						<p>
 							<span class="fragment">Work:</span>
@@ -73,13 +72,17 @@
 						</p>
 					</span>
 				</span>
-				<span class="fragment">
-					<span class="prompt">all of these subjects have influenced my attitude towards run-time
-						disappointment</span>
+				<span class="prompt">
+					<span class="fragment">
+						all of these subjects have influenced my attitude towards run-time disappointment
+					</span>
+					<span class="fragment">
+						note: title was chosen before decision not to proceed with contracts for C++23!
+					</span>
 				</span>
 			</section>
 
-			<section data-transition="convex-in slide-out">
+			<!-- <section data-transition="convex-in slide-out">
 				<h3>This talk...</h3>
 				<div style="display: flex">
 					<div style="flex: 48%">
@@ -141,6 +144,16 @@
 					</div>
 				</div>
 				<p class="fragment">But do it all!!</p>
+			</section> -->
+
+			<section data-transition="slide-in convex-out">
+				<h3>Contracts</h3>
+				<p><a href="https://youtu.be/aAFRxRznVjQ">Contract Programming in C++(20)</a></p>
+				<p>Alisdair Meredith, CppCon 2018</p>
+				<blockquote cite="https://www.youtube.com/watch?v=aAFRxRznVjQ&t=359s">
+					A contract is an exchange of promises
+					between a client and a provider.
+				</blockquote>
 			</section>
 
 			<section data-transition="convex-in slide-out">
@@ -173,16 +186,6 @@
 						it's not always obvious which is which
 					</span>
 				</span>
-			</section>
-
-			<section data-transition="slide-in convex-out">
-				<h3>Contracts</h3>
-				<p><a href="https://youtu.be/aAFRxRznVjQ">Contract Programming in C++(20)</a></p>
-				<p>Alisdair Meredith, CppCon 2018</p>
-				<blockquote cite="https://www.youtube.com/watch?v=aAFRxRznVjQ&t=359s">
-					A contract is an exchange of promises
-					between a client and a provider.
-				</blockquote>
 			</section>
 
 
@@ -506,7 +509,9 @@
 					<li class="fragment">Such violations are <em>errors</em>.</li>
 					<li class="fragment">Errors should be handled by the program.</li>
 				</ul>
-				<span class="prompt">so let's talk about</span>
+				<p class="prompt">
+					<span class="fragment">so let's talk about</span>
+				</p>
 			</section>
 
 
@@ -590,7 +595,7 @@
 							<li class="fragment">file doesn't conform to format, e.g. JSON</li>
 							<li class="fragment">parameter is out of range</li>
 							<li class="fragment">unexpected device type</li>
-							<li class="fragment">unexpected network packed size</li>
+							<li class="fragment">unexpected network packet size</li>
 						</ul>
 					</div>
 				</div>
@@ -657,6 +662,9 @@
 				</p>
 				<p class="fragment">
 					But part of the problem is its versatility.
+				</p>
+				<p class="fragment">
+					An important consideration is to allow for versatility.
 				</p>
 			</section>
 
@@ -797,16 +805,42 @@
 			</section>
 
 			<section data-transition="slide-in slide-out">
+				<h3>Functions Are a Track Event</h3>
+				<p class="fragment">
+					There are zero or more obstacles and one finish line.
+				</p class="fragment">
+				<pre class="fragment" data-id="code-animation"><code class="cpp" data-trim data-line-numbers="1|3-7|9-13|15-16">
+					auto do_something(auto param)
+					{
+						// hurdle 1
+						auto intermediate_thing1 = get_a_thing(param)
+						if (!intermediate_thing1) {
+							return failure;
+						}
+
+						// hurdle 2
+						auto intermediate_thing2 = get_another_thing(intermediate_thing1)
+						if (!intermediate_thing2) {
+							return failure;
+						}
+
+						// finish line
+						return intermediate_thing2;
+					}
+				</code></pre>
+			</section>
+
+			<section data-transition="slide-in slide-out">
 				<h3>Exceptions</h3>
 				<ul class="fragment">
 					<p>Pros:
-					<li class="fragment">versatile/scalable</li>
-					<li class="fragment">very efficient in happy path</li>
-					<li class="fragment">hides control flow</li>
+						<li class="fragment">versatile/scalable</li>
+						<li class="fragment">very efficient normal path</li>
+						<li class="fragment">hide control flow</li>
 					<p class="fragment">Cons:</p>
-					<li class="fragment">exceedingly slow in failure path</li>
-					<li class="fragment">not always optimal in happy path</li>
-					<li class="fragment">hides control flow</li>
+					<li class="fragment">exceedingly slow in exceptional path</li>
+					<li class="fragment">not always optimal in normal path</li>
+					<li class="fragment">hide control flow</li>
 				</ul>
 				<div class="prompt">
 					<p class="fragment">
@@ -908,7 +942,18 @@
 						</tr>
 					</tbody>
 				</table>
-				<span class="prompt">lets turn our attention to the C++ API Contract and ...</span>
+				<span class="prompt">next, lets turn to C++ API Contracts</span>
+			</section>
+
+			<section data-transition="slide-in convex-out">
+				<h3>C++ API Contracts</h3>
+				<ul>
+					<li class="fragment">The exchange of promises between the developer(s) using and implementing a C++
+						API.</li>
+					<li class="fragment">Violations are <em>bugs</em>.</li>
+					<li class="fragment">Fixing bugs is as important as fixing compiler errors.</li>
+				</ul>
+				<p class="fragment"><span class="prompt">So let's talk about...</span></p>
 			</section>
 
 
@@ -916,37 +961,343 @@
 				<h1>Bugs!</h1>
 			</section>
 
-			<section data-transition="slide-in convex-out">
-				<h3>C++ API Contracts</h3>
+			<section data-transition="convex-in slide-out">
+				<h3>Bugs</h3>
+				<p class="fragment">A program with a bug:</p>
 				<ul>
-					<li class="fragment">
-						The exchange of promises between the user and developer of a C++ API.
-					</li>
-					<li class="fragment">A correct program requires that the contract is <em>never</em> violated.
-						<ul>
-							<li class="fragment">Developers need to follow practices that help achieve this.</li>
-							<li class="fragment">Incorrect programs and APIs can be exploted.</li>
-						</ul>
-					</li>
-					<li class="fragment">Violations are <em>bugs</em>.</li>
-					<li class="fragment">Bugs must be fixed by the developer.</li>
+					<li class="fragment">is incorrect</li>
+					<li class="fragment">contains undefined behaviour</li>
+					<li class="fragment">is vulnerable</li>
+					<li class="fragment">violates the <em>End User Contract</em>.</li>
 				</ul>
+				<p class="fragment"><span class="prompt">and again...</span></p>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<p><a href="https://xkcd.com/435/">xkcd.com/435</a></p>
+				<img width=100% src="purity.png" alt="XKCD comic strip about purity" />
+				<div style="display: flex">
+					<span style="flex: 3%"></span>
+					<span style="flex: 11%">errors</span>
+					<span style="flex: 13%">errors</span>
+					<span style="flex: 13%">errors</span>
+					<span style="flex: 12%">errors</span>
+					<span style="flex: 10%">errors</span>
+					<span style="flex: 8%" class="witw">errors</span>
+					<span style="flex: 12%" class="witw">errors</span>
+					<span style="flex: 10%">bugs</span>
+					<span style="flex: 8%"></span>
+				</div>
+				<span class="prompt">bugs are fundamental</span>
+			</section>
+
+			<section data-transition="slide-in fade-out">
+				<h3>Example of Client C++ API Contract Violation</h3>
+				<h2>PID Controller</h2>
+			</section>
+
+			<section data-transition="fade-in fade-out"
+				data-background-iframe="https://en.wikipedia.org/wiki/PID_controller" data-background-interactive
+				data-preload>
+				<h2 class="witw" style="color: rgb(0, 0, 0); background-color: rgba(131, 131, 131, 0.445);">
+					Example Bug: PID Controller
+				</h2>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p style="color: rgb(0, 0, 0); background-color: rgba(131, 131, 131, 0.445);">
+					<a href="https://en.wikipedia.org/wiki/PID_controller">en.wikipedia.org/wiki/PID_controller</a>
+				</p>
+			</section>
+
+			<section data-transition="fade-out">
+				<div>
+					<img width="960" src="pid-happy.png" alt="graph of PID controller variable in-contract" />
+				</div>
+				<span><em>
+						Kp=.1, Ki=.5, Kd=.01, setpoint=10, pv=30</code></pre>
+					</em></span>
+			</section>
+
+			<section data-transition="fade-out slide-out">
+				<div>
+					<img width="960" src="pid-negative.png" alt="graph of PID controller variable out-of-contract" />
+				</div>
+				<span><em>
+						<span style="color:red">Kp=-.1</span>, Ki=.5, Kd=.01, setpoint=10, pv=30</code></pre>
+					</em></span>
+			</section>
+
+			<section data-transition="slide-in fade-out">
+				<h2>
+					Contract from PID
+				</h2>
+				<a href="https://en.wikipedia.org/wiki/PID_controller#Mathematical_form">
+					<img width=100% src="pid.png" alt="excerpt from Wikipedia page about PID controller" />
+					<p>en.wikipedia.org/wiki/PID_controller#Mathematical_form</p>
+				</a>
+			</section>
+
+			<section data-transition="fade-in slide-out">
+				<h2>
+					Contract from PID
+				</h2>
+				<a href="https://en.wikipedia.org/wiki/PID_controller#Mathematical_form">
+					<img width=100% src="pid-contracts.png"
+						alt="excerpt from Wikipedia page about PID controller with a contract highlighted" />
+					<p>en.wikipedia.org/wiki/PID_controller#Mathematical_form</p>
+				</a>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h4>PID Controller (interface)</h4>
+				<pre data-id="code-animation"><code class="cpp"
+					data-trim data-line-numbers="1|2-6|8-14|10-11|16-19|21-27|29-35|37-38">
+					namespace pid {
+						struct components {
+							double proportional;
+							double integral;
+							double derivative;
+						};
+					
+						// values kept constant throughout operation of a controller
+						struct parameters {
+							// non-negative factors used to generate PID terms
+							components k;
+					
+							double dt;
+						};
+					
+						struct state {
+							double integral;
+							double error;
+						};
+					
+						struct input {
+							// desired value
+							double setpoint;
+					
+							// actual value
+							double process_variable;
+						};
+					
+						struct result {
+							// corrective value to apply to system
+							double correction;
+					
+							// to pass in to next iteration as input::previous state
+							state current;
+						};
+					
+						[[nodiscard]] auto calculate(parameters params, state previous, input in)
+								-> result;
+					}</code></pre>
+				<!-- <span class="prompt">
+					<span class="fragment">
+					</span>
+				</span> -->
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h4>PID Controller (implementation)</h4>
+				<pre data-id="code-animation"><code class="cpp" data-trim data-line-numbers="5-6|8-10|11|13-15|17-20|22-23|25-27">
+					#include "pid.h"
+
+					#include "pid_assert.h"
+					
+					[[nodiscard]] auto pid::calculate(parameters params, state previous, input in)
+							-> result
+					{
+						PID_ASSERT(params.k.proportional >= 0);
+						PID_ASSERT(params.k.integral >= 0);
+						PID_ASSERT(params.k.derivative >= 0);
+						PID_ASSERT(params.dt > 0);
+
+						auto const error = in.setpoint - in.process_variable;
+						auto const next_integral{previous.integral + error * params.dt};
+						auto const derivative = (error - previous.error) / params.dt;
+
+						auto const terms{components{
+								.proportional = params.k.proportional * error,
+								.integral = params.k.integral * next_integral,
+								.derivative = params.k.derivative * derivative}};
+
+						auto const output = terms.proportional + terms.integral + terms.derivative;
+						PID_ASSERT(output == output);
+
+						return result{
+								output,
+								state{next_integral, error}};
+					}</code></pre>
+				<!-- <span class="prompt">
+					<span class="fragment">
+						note the immutability
+					</span>
+				</span> -->
+			</section>
+
+
+			<section data-transition="slide-in fade-out">
+				<h3>Contract Attributes</h3>
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th>C++ API</th>
+							<th class="implicit">standard</th>
+							<th class="implicit">end user</th>
+							<th class="implicit">test user</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="implicit">agreement</td>
+							<td>docs</td>
+							<td class="implicit">ISO/IEC 14882</td>
+							<td class="implicit">docs</td>
+							<td class="implicit">docs</td>
+						</tr>
+						<tr>
+							<td class="implicit">client</td>
+							<td>dev</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">user</td>
+							<td class="implicit">dev</td>
+						</tr>
+						<tr>
+							<td class="implicit">provider</td>
+							<td>dev</td>
+							<td class="implicit">implementer</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">implementer</td>
+						</tr>
+						<tr>
+							<td class="implicit">violation</td>
+							<td>bug</td>
+							<td class="implicit">bug</td>
+							<td class="implicit">error</td>
+							<td class="implicit">error</td>
+						</tr>
+					</tbody>
+				</table>
+				<span class="prompt">So there's an example of a C++ API Contract violation.</span>
+			</section>
+
+			<section data-transition="fade-in slide-out">
+				<h3>Contract Attributes</h3>
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th class="implicit">C++ API</th>
+							<th>standard</th>
+							<th class="implicit">end user</th>
+							<th class="implicit">test user</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="implicit">agreement</td>
+							<td class="implicit">docs</td>
+							<td>ISO/IEC 14882</td>
+							<td class="implicit">docs</td>
+							<td class="implicit">docs</td>
+						</tr>
+						<tr>
+							<td class="implicit">client</td>
+							<td class="implicit">dev</td>
+							<td>dev</td>
+							<td class="implicit">user</td>
+							<td class="implicit">dev</td>
+						</tr>
+						<tr>
+							<td class="implicit">provider</td>
+							<td class="implicit">dev</td>
+							<td>implementer</td>
+							<td class="implicit">dev</td>
+							<td class="implicit">implementer</td>
+						</tr>
+						<tr>
+							<td class="implicit">violation</td>
+							<td class="implicit">bug</td>
+							<td>bug</td>
+							<td class="implicit">error</td>
+							<td class="implicit">error</td>
+						</tr>
+					</tbody>
+				</table>
+				<span class="prompt">Next, lets turn to the C++ Standard.</span>
+			</section>
+
+			<section data-transition="slide-in convex-out">
+				<h3>C++ Standard</h3>
+				<ul>
+					<li class="fragment">The exchange of promises between C++ developers and C++ implementers.</li>
+					<li class="fragment">The authors of the contract are WG21 - not necessarily the providers.</li>
+					<li class="fragment">Client violations are <em>bugs</em>.</li>
+					<li class="fragment">As with C++ API Contracts, violation is UB.</li>
+				</ul>
+				<p class="fragment"><span class="prompt">So I guess we're talking about...</span></p>
+			</section>
+
+
+			<section data-transition="convex-in slide-out">
+				<h1>More Bugs!</h1>
 			</section>
 
 
 
+			<section data-transition="slide-in slide-out">
+				<p>!</p>
+			</section>
+
+			<section data-transition="slide-in slide-out">
+				<h3>Bug or Error?</h3>
+				int f(int const* a, int b, int c)
+				{
+				int sum = 0;
+				for (int i = b; i &lt;= c; i ++)
+				{
+				sum += a[i];
+				}
+				return sum;
+				}
+			</section>
 
 
-			<section data-transition="slide-in convex-out">
-				<h3>End User Contract (recap)</h3>
+			<section data-transition="slide-in slide-out">
+				<h3>Guidance: Simplicity</h3>
 				<ul>
-					<li class="fragment">Provider violation is a bug.</li>
-					<li class="fragment">Bug are dangerous and must be fixed by the developer!</li>
+					<li>Keep all your software simple and correct, including:
+						<ul>
+							<li>Functional (production) code</li>
+							<li>Automated tests</li>
+							<li>Documentation</li>
+							<li>Build system</li>
+						</ul>
+					</li>
+					<li>Avoid control flow, especially <code>if</code> statements</li>
+					<li>Don't over-engineer or write abstractions you don't need (YAGNI)</li>
 				</ul>
 			</section>
 
 			<section data-transition="slide-in slide-out">
-				<h1>Bugs!</h1>
+				<h3>Guidance: Coding Standards</h3>
+				<ul>
+					<li>Commit to modern practices and conventions, e.g.:
+						<ul>
+							<li>C++ Core Guidelines</li>
+							<li>Modern CMake</li>
+							<li>Linux-flavour Git commit descriptions</li>
+						</ul>
+					</li>
+					<li>Avoid control flow, especially <code>if</code> statements</li>
+					<li>Don't over-engineer or write abstractions you don't need (YAGNI)</li>
+				</ul>
 			</section>
 
 
@@ -980,6 +1331,7 @@
 
 			width: 1200,
 			height: 700,
+			// margin: 0,
 
 			hash: true,
 
