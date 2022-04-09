@@ -1,13 +1,3 @@
-<!--
-<h1>Intro/Background</h1>
-<h1>Definitions</h1>
-<h1>Contracts</h1>
-<h1>End User Contract</h1>
-<h1>C++ API Contracts</h1>
-<h1>C++ Standard</h1>
-<h1>Test User Contract</h1>
--->
-
 <!doctype html>
 
 <html>
@@ -37,7 +27,7 @@
       <section data-transition="fade-in slide-out">
         <h3>About Me</h3>
         <p class="fragment">John McFarlane</p>
-        <p class="fragment">Software Engineer, Jaguar Land Rover, Shannon, Ireland</p>
+        <p class="fragment">Software Engineer, Jaguar Land Rover, Shannon, Co Clare, Ireland</p>
         <p class="fragment">
           <img width="80" src="Octocat.png" alt="GitHub logo" />
           <a href="https://github.com/johnmcfarlane/accu-2022-examples/">github.com/johnmcfarlane/accu-2022-examples</a>
@@ -47,7 +37,7 @@
           <a href="https://twitter.com/JSAMcFarlane">twitter.com/JSAMcFarlane</a>
         </p>
         <p>&nbsp;</p>
-        <a href="https://johnmcfarlane.github.io/slides/2022-accu">johnmcfarlane.github.io/slides/2022-accu</a>
+        <a class="fragment" href="https://johnmcfarlane.github.io/accu-2022">johnmcfarlane.github.io/accu-2022</a>
       </section>
 
       <section data-transition="slide-in slide-out">
@@ -65,7 +55,7 @@
           <span class="fragment">word games</span>
         </p>
         <p>
-          <span class="fragment">WG21:</span>
+          <span class="fragment">C++:</span>
           <span class="fragment">low latency,</span>
           <span class="fragment">numerics,</span>
           <span class="fragment">contracts</span>
@@ -524,8 +514,14 @@
       <section data-transition="slide-in slide-out">
         <h3>Errors</h3>
         <ul>
+          <li class="fragment">are imperfections modelled within the system</li>
           <li class="fragment">arise from real-world unpredictability/unreliability</li>
-          <li class="fragment">are caused by real-world phenomena (such as humans), and</li>
+          <li class="fragment">are caused by real-world phenomena (such as humans)</li>
+          <li class="fragment">Input is a major source of errors:
+            <ul>
+              <li class="fragment">command line, network traffic, files, input devices.</li>
+            </ul>
+          </li>
           <li class="fragment">are introduced through interfaces with the real world, e.g.:
             <ul>
               <li class="fragment"><code>std::filesystem</code> and
@@ -535,12 +531,6 @@
               </li>
             </ul>
           </li>
-          <li class="fragment">Input is a major source of errors:
-            <ul>
-              <li class="fragment">command line, network traffic, files, input devices.</li>
-            </ul>
-          </li>
-          <li class="fragment">are imperfections modelled within the system</li>
         </ul>
         <aside class="notes">
           *modelled* imperfections
@@ -569,15 +559,15 @@
         <h3>Errors are things that can go wrong</h3>
         <h3>- even in perfect programs.</h3>
         <aside class="notes">
-          <p class="fragment">crucially, you cannot fix the code to make the error go away</p>
-          <p class="fragment">two main categories of error spring to mind</p>
+          <p>crucially, you cannot fix the code to make the error go away</p>
+          <p>two main categories of error spring to mind</p>
         </aside>
       </section>
 
       <section data-transition="slide-in convex-out">
         <h2>Examples of Errors</h2>
         <aside class="notes">
-          <p class="fragment">
+          <p>
             this is a personal list; I'd love to hear about other examples
           </p>
         </aside>
@@ -610,15 +600,20 @@
 
       <section data-transition="slide-in slide-out">
         <h3>Error Handling</h3>
-        <p class="fragment">
-          Recap: <em>client violations</em> of the <em>End User Contract</em> should be handled by the program
-        </p>
-        <p class="fragment">
-          The user needs to know about them in order to decide what to do next.
-        </p>
-        <p class="fragment">
-          The software must inform the user to this end.
-        </p>
+        <ul>
+          <li class="fragment">
+            Recap: <em>client violations</em> of the <em>End User Contract</em> should be handled by the program
+          </li>
+          <li class="fragment">
+            The user needs to know about them in order to decide what to do next.
+          </li>
+          <li class="fragment">
+            The software must inform the user to this end.
+          </li>
+          <li class="fragment">
+            Be considerate!
+          </li>
+        </ul>
       </section>
 
       <section data-transition="slide-in slide-out">
@@ -652,7 +647,7 @@
           <li class="fragment">Is your program even a program, or reusable library?</li>
         </ul>
         <aside class="notes">
-          <p class="fragment">
+          <p>
             Worse: it's really two questions: how to you signal errors and how to you describe them?
           </p>
         </aside>
@@ -711,7 +706,7 @@ int main(int argc, char const* const* argv)
               <li class="fragment">Log, e.g. print something helpful to `stderr`</li>
             </ul>
           </li>
-          <li class="fragment">Signalling:
+          <li class="fragment">Control Flow (Sad Path):
             <ul>
               <li class="fragment">Exceptions</li>
               <li class="fragment">Return values</li>
@@ -726,13 +721,6 @@ int main(int argc, char const* const* argv)
             it's only an error when it is passed to the user.
           </p>
         </aside>
-      </section>
-
-      <section data-transition="slide-in slide-out">
-        <h3>Best Advice For Error Handling...</h3>
-        <p class="fragment">Practice emotional code!</p>
-        <p class="fragment">Care about the user. Try and imagine you're them. What would help you most?</p>
-        <p class="fragment">Empathise.</p>
       </section>
 
       <section data-transition="slide-in slide-out">
@@ -769,7 +757,7 @@ int main(int argc, char const* const* argv)
 
       <section data-transition="slide-in slide-out">
         <h4>Example 2: Return result, ??? success, log details</h4>
-        <pre class="fragment" data-id="code-animation"><code class="cpp" data-trim data-line-numbers="|10|6-7">
+        <pre class="fragment" data-id="code-animation"><code class="cpp" data-trim data-line-numbers="|10|7|6">
 					// return file's size
 					auto file_size(char const* filename)
 					{
@@ -790,7 +778,7 @@ int main(int argc, char const* const* argv)
 
       <section data-transition="slide-in slide-out">
         <h4>Example 3: Return result <em>or</em> failure, log details</h4>
-        <pre class="fragment" data-id="code-animation"><code class="cpp" data-trim data-line-numbers="|10|7|6|2">
+        <pre class="fragment" data-id="code-animation"><code class="cpp" data-trim data-line-numbers="|2|10|7|6">
 					auto file_size(char const* filename)
 					-&gt; std::optional&lt;std::ifstream::pos_type&gt;
 					{
@@ -811,23 +799,25 @@ int main(int argc, char const* const* argv)
 
       <section data-transition="slide-in slide-out">
         <h4>Example 4: Return result, abort on failure, log details</h4>
-        <pre class="fragment" data-id="code-animation"><code class="cpp" data-trim data-line-numbers="1-7|14|13|5">
-					// error handler function
-					template &lt;typename... args&gt;
-					[[noreturn]] void fatal(args&&... parameters)
-					{
-						std::cerr &lt;&lt; std::format(std::forward&lt;args&gt;(parameters)...);
-						std::abort();
-					}
+        <pre class="fragment" data-id="code-animation"><code class="cpp" data-trim data-line-numbers="1-7|16|13-15|5">
+// error handler function
+template &lt;typename... args&gt;
+[[noreturn]] void fatal(args&&... parameters)
+{
+  std::cerr &lt;&lt; std::format(std::forward&lt;args&gt;(parameters)...);
+  std::abort();
+}
 
-					int main(int argc, char* argv[])
-					{
-						auto const expected_num_params{3};
-						if (argc != expected_num_params) {
-							fatal("Wrong number of arguments provided. Expected={}; Actual={}\n", expected_num_params, argc);
-							return EXIT_FAILURE;
-						}
-					}
+int main(int argc, char* argv[])
+{
+  auto const expected_num_params{3};
+  if (argc != expected_num_params) {
+    fatal(
+        "Wrong number of arguments provided. Expected={}; Actual={}\n",
+        expected_num_params, argc);
+    return EXIT_FAILURE;
+  }
+}
 				</code></pre>
         <aside class="notes">
           minimal; never use an assertion |
@@ -997,7 +987,7 @@ int main(int argc, char const* const* argv)
       </section>
 
       <section data-transition="convex-in slide-out">
-        <h3>More Bugs!</h3>
+        <h3>Bugs</h3>
         <p class="fragment">A program with a bug:</p>
         <ul>
           <li class="fragment">is incorrect</li>
@@ -1134,7 +1124,7 @@ int main(int argc, char const* const* argv)
 
       <section data-transition="slide-in slide-out">
         <h4>PID Controller (implementation)</h4>
-        <pre data-id="code-animation"><code class="cpp" data-trim data-line-numbers="5-6|8-10|11|13-15|17-20|22-23|25-27">
+        <pre data-id="code-animation"><code class="cpp" data-trim data-line-numbers="5-6|8-10|11|13-15|17-20|22-23|24-26">
 					#include "pid.h"
 
 					#include "pid_assert.h"
@@ -1157,7 +1147,6 @@ int main(int argc, char const* const* argv)
 								.derivative = params.k.derivative * derivative}};
 
 						auto const output = terms.proportional + terms.integral + terms.derivative;
-						PID_ASSERT(output == output);
 
 						return result{
 								output,
@@ -1195,15 +1184,6 @@ int main(int argc, char const* const* argv)
           <li>Sentinel values, e.g. <code class="cpp">invalid_id</code>, are trouble!</li>
           <li><em>Defensive</em> or <em>helpful</em> code is unwelcome complexity.</li>
           <li>Trap bugs as they hatch.</li>
-          <li><code class="cpp">unsigned</code> integers have a wide contract, which makes them
-            <em>helpful</em>.
-          </li>
-          <li>Using <code class="cpp">unsigned</code> integers for quantities (e.g. indices) isn't helpful.
-            <ul>
-              <li><a href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Res-signed">ES.102:
-                  Use signed types for arithmetic</a></li>
-            </ul>
-          </li>
         </ul>
       </section>
 
@@ -1369,7 +1349,7 @@ int main(int argc, char const* const* argv)
       <section data-transition="slide-in slide-out">
         <h3>Shift Left</h3>
         <ul>
-          <li class="fragment">Preventing bugs in user programs is essential.</li>
+          <li class="fragment">Preventing bugs in users' programs is essential.</li>
           <li class="fragment">Intercept them as early as possible.
             <ol>
               <li class="fragment">Bug-hostile APIs, languages and tools make the bug inconceivable.</li>
@@ -1396,16 +1376,18 @@ int main(int argc, char const* const* argv)
       <section data-transition="slide-in fade-out">
         <h3>Testing with Sanitizers is Left of Bug Reports</h3>
         <pre data-id="code-animation"><code class="cpp"
-					data-trim data-line-numbers="3-5">
+					data-trim data-line-numbers="3-5|3|4|5">
           int main()
           {
               auto v{std::vector{0, 1}};
               v.push_back(2);
               fmt::print("{}\n", v[3]);
           }</code></pre>
+        <p class="fragment">libstdc++: <em>-D_GLIBCXX_ASSERTIONS</em></p>
+        <p class="fragment">MSVC: <em>/D_ITERATOR_DEBUG_LEVEL=1</em>?</p>
       </section>
 
-      <section data-transition="slide-in fade-out">
+      <section data-transition="fade-in slide-out">
         <h3>A Funny Thing Happened on the Way to the Repository</h3>
         <pre data-id="code-animation"><code class="cpp"
 					data-trim data-line-numbers="14-16|1-6|10|10-12|11">
@@ -1431,7 +1413,7 @@ int main(int argc, char const* const* argv)
 
 
 
-      <section data-transition="fade-in slide-out">
+      <section data-transition="slide-in fade-out">
         <h3>Contract Attributes</h3>
         <table>
           <thead>
@@ -1477,7 +1459,7 @@ int main(int argc, char const* const* argv)
         <aside class="notes">Next, lets turn to the C++ Standard.</aside>
       </section>
 
-      <section data-transition="slide-in fade-out">
+      <section data-transition="fade-in convex-out">
         <h3>Contract Attributes</h3>
         <table>
           <thead>
@@ -1588,7 +1570,7 @@ int main(int argc, char const* const* argv)
       <section data-transition="slide-in fade-out">
         <h3>Trigger Warning: This Assertion Triggers UB!</h3>
         <pre data-id="code-animation"><code class="cpp"
-					data-trim data-line-numbers="1-3|5-7|9-12|14-16|18-20">
+					data-trim data-line-numbers="1-3|5-7|9-12|14-16">
 // For testing coverage, assertions are not necessarily a concern.
 #if defined(PID_DISABLE_ASSERTS)
 #define PID_ASSERT(cond)
@@ -1615,11 +1597,13 @@ int main(int argc, char const* const* argv)
       </section>
 
       <section data-transition="slide-in convex-out">
-        <h3>Versatility</h3>
+        <h3>Simplicity, Uniformity, Versatility</h3>
         <ul>
           <li class="fragment">The choice of how to handle bugs lies in the hands of the developer using the code.</li>
           <li class="fragment">Most UB ('good' UB?) is evidence of bugs.</li>
           <li class="fragment">All bugs stink.</li>
+          <li class="fragment">If you are unsure about correctness (which you should be) you are taking a risk by
+            releasing your product to the client.</li>
           <li class="fragment">If you are unsure about correctness (which you should be) you are taking a risk by
             enabling optimisations.</li>
           <li class="fragment">The distinction between 'user bugs', 'language UB', 'hard UB', 'time travel UB' etc. is
@@ -1630,7 +1614,7 @@ int main(int argc, char const* const* argv)
       <section data-transition="slide-in fade-out">
         <h3>Bugs is Bugs</h3>
         <pre data-id="code-animation"><code class="cpp"
-					data-trim data-line-numbers="2-5|4">
+					data-trim data-line-numbers="2-5|4|7-8">
           // precondition: number is in range [1..26]
           constexpr auto number_to_letter(int number)
           {
@@ -1639,9 +1623,6 @@ int main(int argc, char const* const* argv)
         
           // signed integer overflow violates C++ Standard, is already UB
           number_to_letter(0x7fffffff);</code></pre>
-        <aside class="notes">
-          with Apologies to Hana and Ólafur
-        </aside>
       </section>
 
       <section data-transition="slide-in fade-out">
@@ -1651,7 +1632,7 @@ int main(int argc, char const* const* argv)
           constexpr auto number_to_letter(int number)
           {
             constexpr auto lookup_table = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            return lookup_table[number - min_number];
+            return lookup_table[number - 1];
           }
         
           // signed integer overflow violates C++ Standard, is already UB
@@ -1893,7 +1874,6 @@ conan build \
 						// center is not necessarily the start of the sequence.
 						return sample(p, -1, 1);
 					}</code></pre>
-        <p class="fragment">what about now?</p>
       </section>
 
       <section data-transition="slide-in slide-out">
@@ -2093,7 +2073,6 @@ int accumulate_subrange(int const* numbers, int first, int last)
 
       width: 1200,
       height: 700,
-      // margin: 0,
 
       hash: true,
 
